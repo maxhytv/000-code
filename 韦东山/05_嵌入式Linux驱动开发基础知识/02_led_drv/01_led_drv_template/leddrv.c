@@ -19,7 +19,10 @@
 
 #define LED_NUM 2
 
-/* 1. 确定主设备号                                                                 */
+/* 1. 确定主设备号     */
+//设备类是一个重要的概念，
+//它负责将设备驱动程序与设备节点联系起来，
+//并为用户空间提供一致的设备接口。									 
 static int major = 0;
 static struct class *led_class;
 struct led_operations *p_led_opr;
@@ -53,6 +56,9 @@ static ssize_t led_drv_write (struct file *file, const char __user *buf, size_t 
 
 static int led_drv_open (struct inode *node, struct file *file)
 {
+	//在嵌入式Linux中，int minor = iminor(node);
+	//是将node所表示的设备节点的次设备号
+	//赋值给整型变量minor。
 	int minor = iminor(node);
 	
 	printk("%s %s line %d\n", __FILE__, __FUNCTION__, __LINE__);
