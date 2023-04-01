@@ -1,3 +1,5 @@
+//指定引脚
+
 
 #include "led_resource.h"
 

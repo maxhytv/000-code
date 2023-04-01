@@ -47,12 +47,13 @@ static ssize_t led_drv_write (struct file *file, const char __user *buf, size_t 
 
 	/* 根据次设备号和status控制LED */
 	p_led_opr->ctl(minor, status);
-	
+	//返回写入的字节数，本函数中固定为1字节。
 	return 1;
 }
 
 static int led_drv_open (struct inode *node, struct file *file)
 {
+	//次设备号用于标识同一驱动程序中的不同设备实例
 	int minor = iminor(node);
 	
 	printk("%s %s line %d\n", __FILE__, __FUNCTION__, __LINE__);

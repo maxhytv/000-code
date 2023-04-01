@@ -1,4 +1,8 @@
-﻿#include <linux/module.h>
+﻿
+//实现GPIO操作
+
+
+#include <linux/module.h>
 
 #include <linux/fs.h>
 #include <linux/errno.h>
