@@ -18,6 +18,7 @@
 #include <linux/tty.h>
 #include <linux/kmod.h>
 #include <linux/gfp.h>
+
 #include "led_opr.h"
 #include "led_resource.h"
 
@@ -25,6 +26,9 @@ static struct led_resource *led_rsc;
 static int board_demo_led_init (int which) /* 初始化LED, which-哪个LED */	   
 {	
 	//printk("%s %s line %d, led %d\n", __FILE__, __FUNCTION__, __LINE__, which);
+	//这段代码的作用是检查全局变量led_rsc是否为空指针，
+	//如果为空则调用get_led_resouce()函数获取LED资源，
+	//并将获取到的资源赋值给led_rsc变量。如果led_rsc不为空，则不做任何操作，直接跳过if语句。
 	if (!led_rsc)
 	{
 		led_rsc = get_led_resouce();
