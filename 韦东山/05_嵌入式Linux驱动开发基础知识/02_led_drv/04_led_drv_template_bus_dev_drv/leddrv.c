@@ -40,6 +40,7 @@ void register_led_operations(struct led_operations *opr)
 	p_led_opr = opr;
 }
 
+//使其可供其他内核模块使用。
 EXPORT_SYMBOL(led_class_create_device);
 EXPORT_SYMBOL(led_class_destroy_device);
 EXPORT_SYMBOL(register_led_operations);

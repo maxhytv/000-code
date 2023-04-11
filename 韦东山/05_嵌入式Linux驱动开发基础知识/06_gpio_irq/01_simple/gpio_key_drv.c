@@ -32,10 +32,19 @@ struct gpio_key{
 
 static struct gpio_key *gpio_keys_100ask;
 
+//定义了一个名为gpio_key_isr的静态中断服务函数，
+//该函数将接收作为参数的IRQ号和设备标识符dev_id，
+//并返回一个irqreturn_t类型的值。
 static irqreturn_t gpio_key_isr(int irq, void *dev_id)
 {
 	struct gpio_key *gpio_key = dev_id;
 	int val;
+
+	//读取输入值，并将其赋值给变量val。
+	//gpiod_get_value函数用于获取指定GPIO的值，
+	//它的参数是表示GPIO设备的gpiod结构体的指针。
+	//读取成功时，该函数将返回0或1的整数类型数据，
+	//分别表示GPIO的低电平和高电平状态。
 	val = gpiod_get_value(gpio_key->gpiod);
 	
 
@@ -54,19 +63,30 @@ static int gpio_key_probe(struct platform_device *pdev)
 	struct device_node *node = pdev->dev.of_node;
 	int count;
 	int i;
+//被用来表示GPIO在设备树中的属性信息。
+//通过枚举类型，我们可以更方便地定义GPIO的输入输出属性
+//（如上拉、下拉、高电平、低电平等），
+//以及支持的特殊功能，如中断和SPI等。
+//OF_GPIO_ACTIVE_LOW = 0x1, /* 表示 GPIO 是低电平有效 */
 	enum of_gpio_flags flag;
 	unsigned flags = GPIOF_IN;
 		
 	printk("%s %s line %d\n", __FILE__, __FUNCTION__, __LINE__);
-
+//该函数用于计算设备树中指定节点下可用的GPIO数量。
 	count = of_gpio_count(node);
 	if (!count)
 	{
 		printk("%s %s line %d, there isn't any gpio available\n", __FILE__, __FUNCTION__, __LINE__);
 		return -1;
 	}
-
+//这行代码用于分配内存，以存储GPIO键的信息。
+//该函数使用kzalloc函数，其作用类似于标准的C库函数malloc。
+//这里我们需要分配一个结构体数组，
+//并将其大小设置为count个struct gpio_key结构体的大小。
+//通过这种方式，我们可以在内存中创建足够的空间，
+//以存储每个GPIO键的信息，包括其所连接的GPIO口号和属性信息。
 	gpio_keys_100ask = kzalloc(sizeof(struct gpio_key) * count, GFP_KERNEL);
+	
 	for (i = 0; i < count; i++)
 	{
 		gpio_keys_100ask[i].gpio = of_get_gpio_flags(node, i, &flag);
@@ -80,7 +100,7 @@ static int gpio_key_probe(struct platform_device *pdev)
 
 		if (flag & OF_GPIO_ACTIVE_LOW)
 			flags |= GPIOF_ACTIVE_LOW;
-
+//求一个GPIO引脚，并在设备移除时自动释放
 		err = devm_gpio_request_one(&pdev->dev, gpio_keys_100ask[i].gpio, flags, NULL);
 
 		

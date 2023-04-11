@@ -25,13 +25,13 @@ static struct class *led_class;
 static struct gpio_desc *led_gpio;
 
 
-/* 3. 实现对应的open/read/write等函数，填入file_operations结构�?                  */
+/* 3. 实现对应的open/read/write等函数，填入file_operations结构使                  */
 static ssize_t led_drv_read (struct file *file, char __user *buf, size_t size, loff_t *offset)
 {
 	printk("%s %s line %d\n", __FILE__, __FUNCTION__, __LINE__);
 	return 0;
 }
-
+ 
 /* write(fd, &val, 1); */
 static ssize_t led_drv_write (struct file *file, const char __user *buf, size_t size, loff_t *offset)
 {
@@ -66,7 +66,7 @@ static int led_drv_close (struct inode *node, struct file *file)
 	return 0;
 }
 
-/* 定义自己的file_operations结构�?                                             */
+/* 定义自己的file_operations结构体                                             */
 static struct file_operations led_drv = {
 	.owner	 = THIS_MODULE,
 	.open    = led_drv_open,
@@ -84,7 +84,7 @@ static int chip_demo_gpio_probe(struct platform_device *pdev)
 	
 	printk("%s %s line %d\n", __FILE__, __FUNCTION__, __LINE__);
 
-	/* 4.1 设备树中定义�? led-gpios=<...>;	*/
+	/* 4.1 设备树中定义朿 led-gpios=<...>;	*/
     led_gpio = gpiod_get(&pdev->dev, "led", 0);
 	if (IS_ERR(led_gpio)) {
 		dev_err(&pdev->dev, "Failed to get GPIO for led\n");
@@ -146,7 +146,7 @@ static int __init led_init(void)
 	return err;
 }
 
-/* 3. 有入口函数就应该有出口函数：卸载驱动程序时，就会去调用这个出口函�? *     卸载platform_driver
+/* 3. 有入口函数就应该有出口函数：卸载驱动程序时，就会去调用这个出口函敿 *     卸载platform_driver
  */
 static void __exit led_exit(void)
 {

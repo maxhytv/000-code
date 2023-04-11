@@ -41,6 +41,7 @@ static ssize_t led_drv_write (struct file *file, const char __user *buf, size_t 
 	//写什么？status
 	int err;
 	char status;
+	
 	//inode 结构体，用于存储文件的元数据信息，例如文件类型、权限、大小、创建时间等。
 	//在内核中，可以通过文件描述符 file 来获取文件对应的 inode 结构体指针，以便进行对文件的操作。
 	//获取了文件的 inode 结构体指针之后，就可以对文件进行操作，例如读取文件内容、修改文件权限等。
@@ -124,6 +125,7 @@ static int __init led_init(void)
 	for (i = 0; i < LED_NUM; i++)
 		device_create(led_class, NULL, MKDEV(major, i), NULL, "100ask_led%d", i); /* /dev/100ask_led0,1,... */
 	
+	//用与接受static struct led_operations board_demo_led_opr
 	p_led_opr = get_board_led_opr();
 	
 	return 0;
@@ -135,11 +137,11 @@ static void __exit led_exit(void)
 	int i;
 	printk("%s %s line %d\n", __FILE__, __FUNCTION__, __LINE__);
 
-	//销毁已经创建的类
+	//销毁设备节点
 	for (i = 0; i < LED_NUM; i++)
 		device_destroy(led_class, MKDEV(major, i)); /* /dev/100ask_led0,1,... */
 
-	device_destroy(led_class, MKDEV(major, 0));
+	//销毁已经创建的类
 	class_destroy(led_class);
 
 	//注销已经注册的字符设备
